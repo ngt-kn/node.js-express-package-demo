@@ -9,9 +9,11 @@ const config = require ('config');
 const debug = require('debug')('app:startup');
 
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-
- 
 console.log(`app: ${app.get('env')}`);
+
+// use a view engine to return html to client
+app.set('view engine', 'pug');
+app.set('views', './views'); // default, put all templates here
 
 // parses body type json
 app.use(express.json());
@@ -26,7 +28,7 @@ app.use(express.urlencoded({ extened: true}));
 app.use(express.static('public'));
 
 // middleware for increased security, better to load early
-app.use(helmet);
+app.use(helmet());
 
 /**
  * Setup config
@@ -59,7 +61,7 @@ const courses = [
  * http Get request
  */
 app.get('/', (req, res) => {
-    res.send('Hello World!!!');
+    res.render('index', {title: 'My express app', message: 'Hello World!'});
 });
 
 app.get('/api/courses', (req, res) => {
