@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const logger = require('./logger');
 const auth = require('./authenicate');
+const config = require ('config');
+const debug = require('debug')('app:startup');
 
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
 
@@ -26,12 +28,19 @@ app.use(express.static('public'));
 // middleware for increased security, better to load early
 app.use(helmet);
 
+/**
+ * Setup config
+ */
+// console.log('Application Name: ' + config.get('name'));
+// console.log('Mail Server Name: ' + config.get('mail.host'));
+// console.log('Mail Password: ' + config.get('mail.password'));
+
 // if env not set returns development
 if (app.get('env') === 'development') {
     // enable http logging, will impact processing pipeline, may not want to use for production
     // or only use for specific situations
     app.use(morgan('tiny'));
-    console.log("morgan enabled...")
+    debug("morgan enabled...");
 }
 
 // Custom middleware function placeholder for logging
