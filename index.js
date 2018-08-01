@@ -2,7 +2,16 @@ const Joi = require('joi');
 const express  = require('express');
 const app = express();
 
+const logger = require('./logger');
+const auth = require('./authenicate');
+
 app.use(express.json());
+
+// Custom middleware function placeholder for logging
+app.use(logger);
+
+// Custom middleware function placehoder for authentication
+app.use(auth);
 
 const courses = [
     { id: 1, name: 'course 1' },
@@ -44,6 +53,7 @@ app.post('/api/courses', (req, res) => {
     if(error){
         // return code 400 (Bad Request)
         return res.status(400).send(error.details[0].message);
+
     }
     
     // Add new course
