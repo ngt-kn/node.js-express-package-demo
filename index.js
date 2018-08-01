@@ -1,17 +1,39 @@
 const Joi = require('joi');
 const express  = require('express');
 const app = express();
-
+const helmet = require('helmet');
+const morgan = require('morgan');
 const logger = require('./logger');
 const auth = require('./authenicate');
 
+
+// parses body type json
 app.use(express.json());
+
+/**
+ * parses incoming request with url encoded payloads i.e. key=value&key=value
+ * then formats as json body. extened allows use of arrays and complex objects
+ */
+app.use(express.urlencoded({ extened: true}));
+
+// serve static files
+app.use(express.static('public'));
+
+// middleware for increased security, better to load early
+app.use(helmet);
+
+// enable http logging, will impact processing pipeline, may not want to use for production
+// or only use for specific situations
+app.use(morgan('tiny'));
 
 // Custom middleware function placeholder for logging
 app.use(logger);
 
 // Custom middleware function placehoder for authentication
 app.use(auth);
+
+
+
 
 const courses = [
     { id: 1, name: 'course 1' },
