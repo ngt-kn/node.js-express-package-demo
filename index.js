@@ -6,6 +6,10 @@ const morgan = require('morgan');
 const logger = require('./logger');
 const auth = require('./authenicate');
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+
+ 
+console.log(`app: ${app.get('env')}`);
 
 // parses body type json
 app.use(express.json());
@@ -22,18 +26,19 @@ app.use(express.static('public'));
 // middleware for increased security, better to load early
 app.use(helmet);
 
-// enable http logging, will impact processing pipeline, may not want to use for production
-// or only use for specific situations
-app.use(morgan('tiny'));
+// if env not set returns development
+if (app.get('env') === 'development') {
+    // enable http logging, will impact processing pipeline, may not want to use for production
+    // or only use for specific situations
+    app.use(morgan('tiny'));
+    console.log("morgan enabled...")
+}
 
 // Custom middleware function placeholder for logging
 app.use(logger);
 
 // Custom middleware function placehoder for authentication
 app.use(auth);
-
-
-
 
 const courses = [
     { id: 1, name: 'course 1' },
